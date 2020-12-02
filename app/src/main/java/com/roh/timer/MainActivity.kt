@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.view.View
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
@@ -17,7 +18,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private var isPlaying = false
-    private var isRunning: Boolean = false;
+    private var isRunning: Boolean = false
 
     private lateinit var countdownTimer: CountDownTimer
     var timeMilliSeconds = 0L
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mTxtPlayPause: TextView
     private lateinit var mCardView: LinearLayout
     private lateinit var mCardBottom: LinearLayout
-    private lateinit var mUp: ImageView
+    private lateinit var mUp: LottieAnimationView
     private lateinit var mDown: ImageView
 
 
@@ -49,6 +50,8 @@ class MainActivity : AppCompatActivity() {
         mCardView = findViewById(R.id.linear_layout)
         mCardBottom = findViewById(R.id.lin_)
         mUp = findViewById(R.id.up)
+        mUp.speed = 0.4F
+        mUp.setMaxFrame(80)
         mDown = findViewById(R.id.down)
 
         mTimer.text = getString(R.string.time)
@@ -59,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        mPlayPause.setOnClickListener(View.OnClickListener {
+        mPlayPause.setOnClickListener {
 
             if (isPlaying) {
                 pauseTimer()
@@ -76,17 +79,19 @@ class MainActivity : AppCompatActivity() {
                     startTimer(timeMilliSeconds)
 
                     val calendar = Calendar.getInstance()
-                    var hour = calendar.get(Calendar.HOUR_OF_DAY)
+                    val hour = calendar.get(Calendar.HOUR_OF_DAY)
                     val minute = calendar.get(Calendar.MINUTE)
 
-                    var plusMin = minute+3
+                    var plusMin = minute + 3
+                    var plusHr = hour
 
-                    if (plusMin > 59){
-                        hour += 1
+
+                    if (plusMin > 59) {
+                        plusHr += 1
                         plusMin -= 59
                     }
 
-                    mCurrentTime.text = "$hour:$minute - $hour:$plusMin"
+                    mCurrentTime.text = "$hour:$minute - $plusHr:$plusMin"
 
 
                 }
@@ -116,7 +121,7 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-        })
+        }
 
         mCardBottom.setOnClickListener {
             slideUp(mCardView)
@@ -212,9 +217,12 @@ class MainActivity : AppCompatActivity() {
         animate.fillAfter = true
         view.startAnimation(animate)
 
+        mCardView.visibility = View.VISIBLE
 
-        mCardBottom.visibility = View.INVISIBLE;
-        mCardView.visibility = View.VISIBLE;
+        Handler().postDelayed({
+            mCardBottom.visibility = View.INVISIBLE
+
+        }, 200)
 
 
 
@@ -229,8 +237,14 @@ class MainActivity : AppCompatActivity() {
         animate.duration = 500
         animate.fillAfter = true
         view.startAnimation(animate)
-        mCardView.visibility = View.INVISIBLE;
-        mCardBottom.visibility = View.VISIBLE;
+
+        mCardView.visibility = View.INVISIBLE
+
+        Handler().postDelayed({
+            mCardBottom.visibility = View.VISIBLE
+
+
+        },200)
 
 
     }

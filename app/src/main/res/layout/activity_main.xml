@@ -130,12 +130,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
+                <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/up"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_more"/>
+                    app:lottie_rawRes="@raw/up_arrow"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true"/>
 
 
             </RelativeLayout>
